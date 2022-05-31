@@ -1,8 +1,9 @@
 class TicTacToe {
-    main = document.querySelector('#main');
     boardContainer = undefined;
+    playerX = 'x';
+    playerO = 'o';
     state = {
-        turn: 'x',
+        turn: this.playerX,
         x: {
             fieldPositions: [],
         },
@@ -19,6 +20,7 @@ class TicTacToe {
             [1,5,9],
             [2,5,8],
             [3,5,7],
+            [3,6,9],
             [4,5,6],
             [7,8,9]
         ]
@@ -29,6 +31,7 @@ class TicTacToe {
     }
 
     createBoard() {
+        const main = document.querySelector('#main');
         const boardContainer = document.createElement('div');
         boardContainer.setAttribute('id', 'container')
         main.appendChild(boardContainer);
@@ -47,19 +50,25 @@ class TicTacToe {
     }
 
     getCorrectText() {
-        if (this.state.turn === 'x') {
-            return 'X';
+        if (this.state.turn === this.playerX) {
+            return this.playerX.toUpperCase();
         } else {
-            return 'O';
+            return this.playerO.toUpperCase();
         }
     }
 
-    changeTurn(fieldNumber) {
-        if (this.state.turn === 'x') {
-            this.state.turn = 'o';
+    changeTurn() {
+        if (this.state.turn === this.playerX) {
+            this.state.turn = this.playerO;
+        } else {
+            this.state.turn = this.playerX;
+        }
+    }
+
+    registerPlayerFieldPosition(fieldNumber) {
+        if (this.state.turn === this.playerX) {
             this.state.x.fieldPositions.push(fieldNumber);
         } else {
-            this.state.turn = 'x';
             this.state.o.fieldPositions.push(fieldNumber);
         }
     }
@@ -72,38 +81,51 @@ class TicTacToe {
         statusContainer.appendChild(playAgainButton);
     }
 
+    removeEmptyCellButton(fieldNumber) {
+        const buttonField = document.querySelector(`#button-${fieldNumber}`);
+        buttonField.remove();
+    }
+
+    printPlayerInBoard(field) {
+        const fieldText = document.createElement('h2');
+        fieldText.textContent = this.getCorrectText();
+        field.appendChild(fieldText)
+    }
+
     makeMove(field) {
         if(!this.state.isGameOver) {
-            const fieldText = document.createElement('h2');
-            fieldText.textContent = this.getCorrectText();
-            field.appendChild(fieldText)
-            this.changeTurn(field.dataset.fieldNumber);
-            const buttonField = document.querySelector(`#button-${field.dataset.fieldNumber}`);
-            buttonField.remove();
+            this.printPlayerInBoard(field);
+            this.registerPlayerFieldPosition(field.dataset.fieldNumber);
+            this.changeTurn();
+            this.removeEmptyCellButton(field.dataset.fieldNumber);
             this.checkIfGameIsOver();
-            if(this.state.isGameOver) {
-                this.renderPlayAgainButton();
-            }
         }
     }
 
     checkForWinner() {
         const { winningPositions } = this.state;
-        const sortedXString = this.state.x.fieldPositions.sort((a,b)=>a-b).join('');
-        const sortedOString = this.state.o.fieldPositions.sort((a,b)=>a-b).join('');
 
         winningPositions.forEach(winArray => {
-            const winString = winArray.join('');
-            if(sortedXString.includes(winString)) {
+            const xContainsWinPosition = winArray.every(element => {
+                return this.state.x.fieldPositions.includes(element.toString());
+            })
+            if(xContainsWinPosition) {
                 this.state.isGameOver = true;
-                this.state.winner = 'x';
+                this.state.winner = this.playerX;
                 this.printGameStatus();
+                this.renderPlayAgainButton();
+                return;
             }
 
-            if(sortedOString.includes(winString)) {
+            const oContainsWinPosition = winArray.every(element => {
+                return this.state.o.fieldPositions.includes(element.toString());
+            })
+            if(oContainsWinPosition) {
                 this.state.isGameOver = true;
-                this.state.winner = 'o'
+                this.state.winner = this.playerO
                 this.printGameStatus();
+                this.renderPlayAgainButton();
+                return;
             }
         })
     }
@@ -111,11 +133,13 @@ class TicTacToe {
     checkForDraw() {
         const xPlaysLength = this.state.x.fieldPositions.length;
         const oPlaysLength = this.state.o.fieldPositions.length;
+        const allPlaysWereMade = xPlaysLength + oPlaysLength === this.state.maxPlays;
 
-        if(xPlaysLength + oPlaysLength === this.state.maxPlays && !this.state.isGameOver) {
+        if(allPlaysWereMade && !this.state.isGameOver) {
             this.state.isGameOver = true;
             this.state.isDraw = true;
             this.printGameStatus();
+            this.renderPlayAgainButton();
         }
     }
 
@@ -141,7 +165,7 @@ class TicTacToe {
     resetGame() {
         this.state = {
             ...this.state,
-            turn: 'x',
+            turn: this.playerX,
             x: {
                 fieldPositions: [],
             },
@@ -157,6 +181,12 @@ class TicTacToe {
         this.createBoard();
     }
 }
+
+const main = document.querySelector('#main');
+const mainTitle = document.createElement('h1');
+mainTitle.classList.add('main-title');
+mainTitle.textContent = 'Tic Tac Toe'
+main.appendChild(mainTitle);
 
 const ticTacToe = new TicTacToe();
 

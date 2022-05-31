@@ -1,11 +1,33 @@
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --background-bright-color: #fff;
+    --border-bright-color: #fff;
+    --border-dark-color: #000;
+    --btn-bg-color-primary: green;
+    --typography-bright-color: #fff;
+    --grid-cell-width: 150px;
+    --grid-cell-height: 150px;
+    --button-grid-width: 130px;
+    --button-grid-height: 130px;
+    --typography-pieces-primary: 128px;
+    --typography-heading-primary: 70px;
+    --typography-heading-secondary: 40px;
+    --typography-body-primary: 20px;
+    --border-width: 4px;
+}
+
 #main {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-* {
-    box-sizing: border-box;
+.main-title {
+    font-size: var(--typography-heading-primary);
+    margin: 50px;
 }
 
 h2 {
@@ -14,64 +36,64 @@ h2 {
 
 button, h2 {
     text-align: center;
-    font-size: 170px;
-    width: 170px;
-    margin: 13px 13px;
+    font-size: var(--typography-pieces-primary);
+    width: var(--button-grid-width);
+    margin: 8px;
     padding: 0;
     line-height: 1;
 }
 
 button {
-    border: 1px solid white;
-    background: #fff;
+    border: 1px solid var(--border-bright-color);
+    background: var(--background-bright-color);
     cursor: pointer;
-    height: 170px;
+    height: var(--button-grid-height);
 }
 
 #container {
     display: grid;
-    grid-template-columns: 200px 200px 200px;
-    grid-template-rows: 200px 200px 200px;  
+    grid-template-columns: repeat(3, var(--grid-cell-height)); 
 }
 
 .field {
-    width: 200px;
-    height: 200px;
+    width: var(--grid-cell-width);
+    height: var(--grid-cell-height);
 }
 
 #field-1,
 #field-2,
 #field-4,
 #field-5 {
-    border-right: 5px solid black;
-    border-bottom: 5px solid black;
+    border-right: var(--border-width) solid var(--border-dark-color);
+    border-bottom: var(--border-width) solid var(--border-dark-color);
 }
 
 #field-3,
 #field-6 {
-    border-bottom: 5px solid black;
+    border-bottom: var(--border-width) solid var(--border-dark-color);
 }
 
 #field-7,
 #field-8 {
-    border-right: 5px solid black;
+    border-right: var(--border-width) solid var(--border-dark-color);
 }
 
 #play-again-button {
-    font-size: 20px;
-    background: green;
+    font-size: var(--typography-body-primary);;
+    background: var(--btn-bg-color-primary);
     height: 50px;
     border-radius: 5px;
-    color: white;
+    color: var(--typography-bright-color);
 }
 
 #game-status-heading {
-    font-size: 40px;
+    font-size: var(--typography-heading-secondary);
     width: 100%;
 }
 
 .status-container {
-    width: 600px;
+    margin-top: 30px;
+    width: calc(var(--grid-cell-width) * 3);
     display: flex;
     flex-direction: column;
     justify-content: center;
