@@ -1,12 +1,18 @@
+@font-face {
+    font-family: dracula;
+    src: url('./dracula.TTF');
+}
+
 * {
     box-sizing: border-box;
 }
 
 :root {
     --background-bright-color: #fff;
+    --background-dark-color: #000;
     --border-bright-color: #fff;
     --border-dark-color: #000;
-    --btn-bg-color-primary: green;
+    --btn-bg-color-primary: rgb(240 21 21);
     --typography-bright-color: #fff;
     --grid-cell-width: 150px;
     --grid-cell-height: 150px;
@@ -16,22 +22,38 @@
     --typography-heading-primary: 70px;
     --typography-heading-secondary: 40px;
     --typography-body-primary: 20px;
+    --typography-dracula-color: rgb(240 21 21);
+    --typography-dracula-font: dracula;
     --border-width: 4px;
+}
+
+body {
+    padding: 0;
+    margin: 0;
 }
 
 #main {
     display: flex;
     flex-direction: column;
     align-items: center;
+    background-image: radial-gradient(circle, rgba(0, 0, 0, .8) 0%, rgba(76, 2, 2, 0.6) 49%, rgba(176, 18, 18, 0.4) 100%), url('./assets/bg.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+
 }
 
 .main-title {
     font-size: var(--typography-heading-primary);
     margin: 50px;
+    font-family: var(--typography-dracula-font);
+    color: var(--typography-dracula-color);
 }
 
 h2 {
     cursor: context-menu;
+    color: var(--typography-bright-color);
+    font-family: var(--typography-dracula-font);
 }
 
 button, h2 {
@@ -44,10 +66,10 @@ button, h2 {
 }
 
 button {
-    border: 1px solid var(--border-bright-color);
-    background: var(--background-bright-color);
+    border: 1px solid var(--border-dark-color);
     cursor: pointer;
     height: var(--button-grid-height);
+    opacity: 0;
 }
 
 #container {
@@ -64,30 +86,32 @@ button {
 #field-2,
 #field-4,
 #field-5 {
-    border-right: var(--border-width) solid var(--border-dark-color);
-    border-bottom: var(--border-width) solid var(--border-dark-color);
+    border-right: var(--border-width) solid var(--border-bright-color);
+    border-bottom: var(--border-width) solid var(--border-bright-color);
 }
 
 #field-3,
 #field-6 {
-    border-bottom: var(--border-width) solid var(--border-dark-color);
+    border-bottom: var(--border-width) solid var(--border-bright-color);
 }
 
 #field-7,
 #field-8 {
-    border-right: var(--border-width) solid var(--border-dark-color);
+    border-right: var(--border-width) solid var(--border-bright-color);
 }
 
 #play-again-button {
-    font-size: var(--typography-body-primary);;
+    font-size: var(--typography-body-primary);
     background: var(--btn-bg-color-primary);
     height: 50px;
     border-radius: 5px;
     color: var(--typography-bright-color);
+    opacity: 1;
 }
 
 #game-status-heading {
     font-size: var(--typography-heading-secondary);
+    font-family: serif;
     width: 100%;
 }
 
