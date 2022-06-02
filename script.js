@@ -22,9 +22,9 @@ class TicTacToe {
             [7,8,9]
         ],
         texts: {
-            playerX: 'x',
-            playerO: 'o',
-            draw: 'It\s a draw',
+            playerX: 'dracula',
+            playerO: 'van helsing',
+            draw: 'It\'s a draw',
             winner: 'The winner is: ',
             ticTacToe: 'Tic Tac Toe',
             playAgain: 'Play Again',
@@ -38,27 +38,30 @@ class TicTacToe {
 
     renderMainTitle() {
         const main = document.querySelector('#main');
-        const mainTitle = document.createElement('h1');
-        mainTitle.classList.add('main-title');
-        mainTitle.textContent = this.state.texts.ticTacToe;
-        main.appendChild(mainTitle);
+        const header = document.createElement('header');
+        main.appendChild(header);
+        const headerTitle = document.createElement('h1');
+        headerTitle.classList.add('header-title');
+        headerTitle.textContent = this.state.texts.ticTacToe;
+        header.appendChild(headerTitle);
     }
 
     createBoard() {
         const main = document.querySelector('#main');
-        const boardContainer = document.createElement('div');
-        boardContainer.setAttribute('id', 'container');
-        main.appendChild(boardContainer);
+        const board = document.createElement('main');
+        board.classList.add('board')
+        main.appendChild(board);
         for (let i = 1; i < 10; i++) {
-            const fieldContainer = document.createElement('div');
-            fieldContainer.setAttribute('id', `field-${i}`);
-            fieldContainer.classList.add('field');
-            fieldContainer.dataset.fieldNumber = i;
-            boardContainer.appendChild(fieldContainer);
+            const boardField = document.createElement('div');
+            boardField.classList.add('board__field')
+            boardField.classList.add(`board__field--${i}`)
+            boardField.dataset.fieldNumber = i;
+            board.appendChild(boardField);
 
-            const fieldButton = document.createElement('button');
-            fieldButton.setAttribute('id', `button-${i}`);
-            fieldContainer.appendChild(fieldButton);
+            const boardFieldButton = document.createElement('button');
+            boardFieldButton.classList.add('board__field__button');
+            boardFieldButton.classList.add(`board__field__button--${i}`);
+            boardField.appendChild(boardFieldButton);
         }
     }
 
@@ -69,14 +72,6 @@ class TicTacToe {
             this.changeTurn();
             this.removeEmptyCellButton(field.dataset.fieldNumber);
             this.checkIfGameIsOver();
-        }
-    }
-
-    getCorrectText() {
-        if (this.state.turn === 0) {
-            return this.state.texts.playerX.toUpperCase();
-        } else {
-            return this.state.texts.playerO.toUpperCase();
         }
     }
 
@@ -98,21 +93,31 @@ class TicTacToe {
 
     renderPlayAgainButton() {
         const playAgainButton = document.createElement('button');
-        playAgainButton.setAttribute('id', 'play-again-button');
+        playAgainButton.classList.add('status__button')
         playAgainButton.textContent = this.state.texts.playAgain;
-        const statusContainer = document.querySelector('.status-container');
+        const statusContainer = document.querySelector('.status');
         statusContainer.appendChild(playAgainButton);
     }
 
     removeEmptyCellButton(fieldNumber) {
-        const buttonField = document.querySelector(`#button-${fieldNumber}`);
+        const buttonField = document.querySelector(`.board__field__button--${fieldNumber}`);
         buttonField.remove();
     }
 
+    getCorrectImageSrc() {
+        if (this.state.turn === 0) {
+            return 'assets/dracula.png';
+        } else {
+            return 'assets/van-helsing.png';
+        }
+    }
+
     printPlayerInBoard(field) {
-        const fieldText = document.createElement('h2');
-        fieldText.textContent = this.getCorrectText();
-        field.appendChild(fieldText);
+        const playerImage = document.createElement('img');
+        playerImage.classList.add('board__field_img')
+        const srcAttribute = this.getCorrectImageSrc();
+        playerImage.setAttribute('src', srcAttribute)
+        field.appendChild(playerImage);
     }
 
     checkForWinner() {
@@ -162,18 +167,23 @@ class TicTacToe {
     }
 
     printGameStatus() {
-        const boardContainer = document.getElementById('container');
-        const statusContainer = document.createElement('div');
-        statusContainer.classList.add('status-container');
-        boardContainer.appendChild(statusContainer);
-        const status = document.createElement('h2');
-        status.setAttribute('id', 'game-status-heading');
+        const board = document.querySelector('#main');
+        const footer = document.createElement('footer');
+        footer.classList.add('status');
+        board.appendChild(footer);
+        const statusMessage = document.createElement('h2');
+        statusMessage.classList.add('status__message')
         if (this.state.isDraw) {
-            status.textContent = this.state.texts.draw;
+            statusMessage.textContent = this.state.texts.draw;
         } else {
-            status.textContent = this.state.texts.winner + this.state.winner.toUpperCase();
+            statusMessage.textContent = this.state.texts.winner + ' ';
+            const winnerName = document.createElement('span');
+            winnerName.classList.add('status__message__name');
+            winnerName.textContent = this.state.winner.toUpperCase();
+            statusMessage.appendChild(winnerName);
+
         } 
-        statusContainer.appendChild(status);
+        footer.appendChild(statusMessage);
     }
 
     resetGame() {
@@ -191,8 +201,10 @@ class TicTacToe {
             isDraw: false,
         }
 
-        const boardContainer = document.getElementById('container');
-        boardContainer.remove();
+        const board = document.querySelector('.board');
+        const statusFooter = document.querySelector('.status');
+        board.remove();
+        statusFooter.remove();
         this.createBoard();
     }
 }
@@ -200,25 +212,25 @@ class TicTacToe {
 const ticTacToe = new TicTacToe();
 
 document.addEventListener('click', event => {
-    if (event.target.parentNode.classList.contains('field')) {
+    if (event.target.parentNode.classList.contains('board__field')) {
         if (event.target.textContent === '') {
             ticTacToe.makeMove(event.target.parentNode);
         }
     }
 
-    if (event.target.id === 'play-again-button') {
+    if (event.target.classList.contains('status__button')) {
         ticTacToe.resetGame();
     }
 });
 
 document.addEventListener('keyup', event => {
-    if (event.code === 'Enter' && event.target.classList.contains('field-button')) {
+    if (event.code === 'Enter' && event.target.classList.contains('board__field__button')) {
         if (event.target.textContent === '') {
             ticTacToe.makeMove(event.target.parentNode);
         }
     }
 
-    if (event.code === 'Enter' && event.target.id === 'play-again-button') {
+    if (event.code === 'Enter' && event.target.classList.contains('status__button')) {
         ticTacToe.resetGame();  
     }
 });

@@ -3,6 +3,8 @@
     src: url('./dracula.TTF');
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap');
+
 * {
     box-sizing: border-box;
 }
@@ -20,7 +22,8 @@
     --button-grid-height: 130px;
     --typography-pieces-primary: 128px;
     --typography-heading-primary: 70px;
-    --typography-heading-secondary: 40px;
+    --typography-heading-secondary: 55px;
+    --typography-heading-tertiary: 40px;
     --typography-body-primary: 20px;
     --typography-dracula-color: rgb(240 21 21);
     --typography-dracula-font: dracula;
@@ -30,6 +33,7 @@
 body {
     padding: 0;
     margin: 0;
+    font-family: 'Montserrat', sans-serif;
 }
 
 #main {
@@ -43,20 +47,15 @@ body {
 
 }
 
-.main-title {
+.header-title {
     font-size: var(--typography-heading-primary);
     margin: 50px;
     font-family: var(--typography-dracula-font);
     color: var(--typography-dracula-color);
-}
-
-h2 {
-    cursor: context-menu;
-    color: var(--typography-bright-color);
     font-family: var(--typography-dracula-font);
 }
 
-button, h2 {
+.board__field__button {
     text-align: center;
     font-size: var(--typography-pieces-primary);
     width: var(--button-grid-width);
@@ -65,61 +64,82 @@ button, h2 {
     line-height: 1;
 }
 
-button {
+.board__field__button:focus {
+    border: 5px solid var(--background-dark-color);
+    opacity: .2;
+    background-color: var(--btn-bg-color-primary);
+}
+
+.board__field__button {
     border: 1px solid var(--border-dark-color);
     cursor: pointer;
     height: var(--button-grid-height);
     opacity: 0;
 }
 
-#container {
+.board {
     display: grid;
     grid-template-columns: repeat(3, var(--grid-cell-height)); 
 }
 
-.field {
+.board__field {
     width: var(--grid-cell-width);
     height: var(--grid-cell-height);
 }
 
-#field-1,
-#field-2,
-#field-4,
-#field-5 {
+.board__field--1,
+.board__field--2,
+.board__field--4,
+.board__field--5 {
     border-right: var(--border-width) solid var(--border-bright-color);
     border-bottom: var(--border-width) solid var(--border-bright-color);
 }
 
-#field-3,
-#field-6 {
+.board__field--3,
+.board__field--6 {
     border-bottom: var(--border-width) solid var(--border-bright-color);
 }
 
-#field-7,
-#field-8 {
+.board__field--7,
+.board__field--8 {
     border-right: var(--border-width) solid var(--border-bright-color);
 }
 
-#play-again-button {
+.board__field_img {
+    width: 90%;
+    margin: 8px;
+}
+
+.status__button {
     font-size: var(--typography-body-primary);
     background: var(--btn-bg-color-primary);
-    height: 50px;
     border-radius: 5px;
     color: var(--typography-bright-color);
-    opacity: 1;
+    padding: 10px 20px;
+    cursor: pointer;
 }
 
-#game-status-heading {
-    font-size: var(--typography-heading-secondary);
-    font-family: serif;
+.status__message {
+    font-size: var(--typography-heading-tertiary);
     width: 100%;
+    text-align: center;
+    margin-bottom: 30px;
+    color: var(--typography-bright-color);
 }
 
-.status-container {
+.status {
     margin-top: 30px;
     width: calc(var(--grid-cell-width) * 3);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.status__message__name {
+    display: block;
+    font-family: var(--typography-dracula-font);
+    color: var(--typography-bright-color);
+    margin: 15px;
+    font-size: var(--typography-heading-secondary);
 }
