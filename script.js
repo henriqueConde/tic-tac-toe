@@ -181,7 +181,6 @@ class TicTacToe {
             winnerName.classList.add('status__message__name');
             winnerName.textContent = this.state.winner.toUpperCase();
             statusMessage.appendChild(winnerName);
-
         } 
         footer.appendChild(statusMessage);
     }
