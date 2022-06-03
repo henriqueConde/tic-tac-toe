@@ -127,7 +127,7 @@ class TicTacToe {
         winningPositions.forEach(winArray => {
             const xContainsWinPosition = winArray.every(element => {
                 return this.state.x.fieldPositions.includes(element.toString());
-            })
+            });
             if (xContainsWinPosition) {
                 this.state.isGameOver = true;
                 this.state.winner = this.state.texts.playerX;
@@ -138,7 +138,7 @@ class TicTacToe {
 
             const oContainsWinPosition = winArray.every(element => {
                 return this.state.o.fieldPositions.includes(element.toString());
-            })
+            });
             if (oContainsWinPosition) {
                 this.state.isGameOver = true;
                 this.state.winner = this.state.texts.playerO;
