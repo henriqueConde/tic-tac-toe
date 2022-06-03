@@ -70,11 +70,19 @@ class MusicPlayer {
 
 const musicPlayer = new MusicPlayer();
 const playBtn = document.querySelector('.music__navigation__button');
-playBtn.addEventListener('click', () => {
-    const playIcon = document.querySelector('#play-icon');
+const playIcon = document.querySelector('#play-icon');
+playBtn.addEventListener('click', () => {    
     if(playIcon.classList.contains('fa-play')) {
         musicPlayer.play();
     } else {
+        musicPlayer.pause();
+    }
+})
+
+document.addEventListener('keyup', event => {
+    if(event.code === 'Space' && playIcon.classList.contains('fa-play')) {
+        musicPlayer.play();
+    } else if (event.code === 'Space') {
         musicPlayer.pause();
     }
 })

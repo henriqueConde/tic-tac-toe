@@ -214,7 +214,6 @@ const ticTacToe = new TicTacToe();
 document.addEventListener('click', event => {
     if (event.target.parentNode.classList.contains('board__field')) {
         if (!event.target.classList.contains("board__field_img")) {
-            console.log('CHEGOU AQUI', event.target);
             ticTacToe.makeMove(event.target.parentNode);
         }
     }
