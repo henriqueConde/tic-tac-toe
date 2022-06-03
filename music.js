@@ -22,6 +22,7 @@ class MusicPlayer {
         imgCover.setAttribute('src', 'assets/Dracula cover.png');
         imgCover.setAttribute('alt', 'music-cover');
         imgCover.classList.add('music__cover');
+        imgCover.classList.add('music__cover--paused');
         musicImg.appendChild(imgCover);
         musicContainer.appendChild(musicImg);
 
@@ -43,23 +44,27 @@ class MusicPlayer {
     play() {
         const audio = document.querySelector('.music__audio');
         const playIcon = document.querySelector('#play-icon');
+        const coverImg = document.querySelector('.music__cover');
         const playPromise = audio.play();
         if (playPromise !== undefined) {
                 playPromise.then(() => {});
             }
         playIcon.classList.toggle('fa-play');
         playIcon.classList.toggle('fa-pause');
+        coverImg.classList.toggle('music__cover--paused');
     }
 
     pause() {
         const audio = document.querySelector('.music__audio');
         const playIcon = document.querySelector('#play-icon');
+        const coverImg = document.querySelector('.music__cover');
         const pausePromise = audio.pause();
         if (pausePromise !== undefined) {
                 pausePromise.then(() => {});
             }
         playIcon.classList.toggle('fa-play');
         playIcon.classList.toggle('fa-pause');
+        coverImg.classList.toggle('music__cover--paused');
     }
 }
 

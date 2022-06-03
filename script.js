@@ -115,6 +115,7 @@ class TicTacToe {
     printPlayerInBoard(field) {
         const playerImage = document.createElement('img');
         playerImage.classList.add('board__field_img')
+        playerImage.setAttribute('alt', 'player-image');
         const srcAttribute = this.getCorrectImageSrc();
         playerImage.setAttribute('src', srcAttribute)
         field.appendChild(playerImage);
@@ -212,7 +213,8 @@ const ticTacToe = new TicTacToe();
 
 document.addEventListener('click', event => {
     if (event.target.parentNode.classList.contains('board__field')) {
-        if (event.target.textContent === '') {
+        if (!event.target.classList.contains("board__field_img")) {
+            console.log('CHEGOU AQUI', event.target);
             ticTacToe.makeMove(event.target.parentNode);
         }
     }
@@ -224,7 +226,7 @@ document.addEventListener('click', event => {
 
 document.addEventListener('keyup', event => {
     if (event.code === 'Enter' && event.target.classList.contains('board__field__button')) {
-        if (event.target.textContent === '') {
+        if (!event.target.classList.contains("board__field_img")) {
             ticTacToe.makeMove(event.target.parentNode);
         }
     }

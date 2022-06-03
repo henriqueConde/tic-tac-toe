@@ -70,6 +70,12 @@ body {
     background-color: var(--btn-bg-color-primary);
 }
 
+.board__field__button:hover {
+    border: 5px solid var(--background-dark-color);
+    opacity: .2;
+    background-color: var(--btn-bg-color-primary);
+}
+
 .board__field__button {
     border: 1px solid var(--border-dark-color);
     cursor: pointer;
@@ -164,6 +170,11 @@ body {
 
 .music__cover {
     width: 60px;
+    animation: rotate 4s linear infinite;
+}
+
+.music__cover--paused {
+    animation-play-state: paused;
 }
 
 .music__navigation__button {
@@ -172,3 +183,13 @@ body {
     height: 30px;
     border-radius: 10px;
 }
+
+@keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+  
+    to {
+      transform: rotate(360deg);
+    }
+  }
