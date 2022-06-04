@@ -1,71 +1,105 @@
+const INITIAL_STATE = {
+    turn: 0,
+    x: {
+        fieldPositions: [],
+    },
+    o: {
+        fieldPositions: [],
+    },
+    isGameOver: false,
+    winner: undefined,
+    isDraw: false,
+    maxPlays: 9,
+}
+
+const MAX_PLAYS = 9;
+
+const WINNING_POSITIONS = [
+    [1,2,3],
+    [1,4,7],
+    [1,5,9],
+    [2,5,8],
+    [3,5,7],
+    [3,6,9],
+    [4,5,6],
+    [7,8,9]
+];
+
+const TEXTS = {
+    playerX: 'dracula',
+    playerO: 'van helsing',
+    draw: 'It\'s a draw',
+    winner: 'The winner is: ',
+    ticTacToe: 'Tic Tac Toe',
+    playAgain: 'Play Again',
+};
+
+const MAIN = document.querySelector('#main');
+
+const makeObjDeepCopy = obj => {
+    return JSON.parse(JSON.stringify(obj));
+}
+
 class TicTacToe {
-    state = {
-        turn: 0,
-        x: {
-            fieldPositions: [],
-        },
-        o: {
-            fieldPositions: [],
-        },
-        isGameOver: false,
-        winner: undefined,
-        isDraw: false,
-        maxPlays: 9,
-        winningPositions: [
-            [1,2,3],
-            [1,4,7],
-            [1,5,9],
-            [2,5,8],
-            [3,5,7],
-            [3,6,9],
-            [4,5,6],
-            [7,8,9]
-        ],
-        texts: {
-            playerX: 'dracula',
-            playerO: 'van helsing',
-            draw: 'It\'s a draw',
-            winner: 'The winner is: ',
-            ticTacToe: 'Tic Tac Toe',
-            playAgain: 'Play Again',
-        }
-    };
+    state = makeObjDeepCopy(INITIAL_STATE);
 
     constructor() {
+        this.resetGame = this.resetGame.bind(this);
+        this.makeMove = this.makeMove.bind(this);
         this.renderMainTitle();
         this.createBoard();
     }
 
+    createEl(tag, attrObj = {}, eventsObj = {}) {
+        const el = document.createElement(tag);
+
+        Object.entries(attrObj).forEach(([attr, value]) => {
+            el[attr] = value;
+        })
+
+        Object.entries(eventsObj).forEach(([eventType, func]) => {
+            el.addEventListener(eventType, func);
+        })
+
+        return el;
+    }
+
     renderMainTitle() {
-        const main = document.querySelector('#main');
-        const header = document.createElement('header');
-        main.appendChild(header);
-        const headerTitle = document.createElement('h1');
-        headerTitle.classList.add('header-title');
-        headerTitle.textContent = this.state.texts.ticTacToe;
+        const header = this.createEl('header');
+        const headerTitle = this.createEl('h1', {
+            className: 'header-title', 
+            textContent: TEXTS.ticTacToe
+        });
+
         header.appendChild(headerTitle);
+        MAIN.appendChild(header);
     }
 
     createBoard() {
-        const main = document.querySelector('#main');
-        const board = document.createElement('main');
-        board.classList.add('board')
-        main.appendChild(board);
+        const board = this.createEl('main', {
+            className: 'board'
+        });
+
         for (let i = 1; i < 10; i++) {
-            const boardField = document.createElement('div');
-            boardField.classList.add('board__field')
-            boardField.classList.add(`board__field--${i}`)
+            const boardField = this.createEl('div', {
+                className: `field field--${i}`,
+            });
             boardField.dataset.fieldNumber = i;
             board.appendChild(boardField);
 
-            const boardFieldButton = document.createElement('button');
-            boardFieldButton.classList.add('board__field__button');
-            boardFieldButton.classList.add(`board__field__button--${i}`);
-            boardField.appendChild(boardFieldButton);
+            const fieldButton = this.createEl('button',  {
+                className: `field__button field__button--${i}`
+            },{
+                click: this.makeMove,
+            });
+            boardField.appendChild(fieldButton);
         }
+
+        MAIN.appendChild(board);
     }
 
-    makeMove(field) {
+    makeMove({ target }) {
+        const { parentNode: field } = target;
         if (!this.state.isGameOver) {
             this.printPlayerInBoard(field);
             this.registerPlayerFieldPosition(field.dataset.fieldNumber);
@@ -92,15 +126,18 @@ class TicTacToe {
     }
 
     renderPlayAgainButton() {
-        const playAgainButton = document.createElement('button');
-        playAgainButton.classList.add('status__button')
-        playAgainButton.textContent = this.state.texts.playAgain;
+        const playAgainButton = this.createEl('button', {
+            className: 'status__button',
+            textContent: TEXTS.playAgain
+        }, {
+            click: this.resetGame,
+        });
         const statusContainer = document.querySelector('.status');
         statusContainer.appendChild(playAgainButton);
     }
 
     removeEmptyCellButton(fieldNumber) {
-        const buttonField = document.querySelector(`.board__field__button--${fieldNumber}`);
+        const buttonField = document.querySelector(`.field__button--${fieldNumber}`);
         buttonField.remove();
     }
 
@@ -113,24 +150,22 @@ class TicTacToe {
     }
 
     printPlayerInBoard(field) {
-        const playerImage = document.createElement('img');
-        playerImage.classList.add('board__field_img')
-        playerImage.setAttribute('alt', 'player-image');
-        const srcAttribute = this.getCorrectImageSrc();
-        playerImage.setAttribute('src', srcAttribute)
+        const playerImage = this.createEl('img', {
+            className: 'field__img',
+            alt: 'player-image',
+            src: this.getCorrectImageSrc(),
+        });
         field.appendChild(playerImage);
     }
 
     checkForWinner() {
-        const { winningPositions } = this.state;
-
-        winningPositions.forEach(winArray => {
+        WINNING_POSITIONS.forEach(winArray => {
             const xContainsWinPosition = winArray.every(element => {
                 return this.state.x.fieldPositions.includes(element.toString());
             });
             if (xContainsWinPosition) {
                 this.state.isGameOver = true;
-                this.state.winner = this.state.texts.playerX;
+                this.state.winner = TEXTS.playerX;
                 this.printGameStatus();
                 this.renderPlayAgainButton();
                 return;
@@ -141,7 +176,7 @@ class TicTacToe {
             });
             if (oContainsWinPosition) {
                 this.state.isGameOver = true;
-                this.state.winner = this.state.texts.playerO;
+                this.state.winner = TEXTS.playerO;
                 this.printGameStatus();
                 this.renderPlayAgainButton();
                 return;
@@ -167,39 +202,35 @@ class TicTacToe {
         if (!this.state.isGameOver) this.checkForDraw();
     }
 
-    printGameStatus() {
-        const board = document.querySelector('#main');
-        const footer = document.createElement('footer');
-        footer.classList.add('status');
-        board.appendChild(footer);
-        const statusMessage = document.createElement('h2');
-        statusMessage.classList.add('status__message')
+    getStatusMessage() {
         if (this.state.isDraw) {
-            statusMessage.textContent = this.state.texts.draw;
+            return TEXTS.draw;
         } else {
-            statusMessage.textContent = this.state.texts.winner + ' ';
-            const winnerName = document.createElement('span');
-            winnerName.classList.add('status__message__name');
-            winnerName.textContent = this.state.winner.toUpperCase();
-            statusMessage.appendChild(winnerName);
+            return TEXTS.winner;
         } 
+    }
+
+    printGameStatus() {
+        const footer = this.createEl('footer', {
+            className: 'status',
+        });
+        const statusMessage = this.createEl('h2', {
+            className: 'status__message',
+            textContent: this.getStatusMessage(),
+        });
+        if(!!this.state.winner) {
+            const winnerName = this.createEl('span', {
+                className: 'status__name',
+                textContent: this.state.winner.toUpperCase() || '',
+            });
+            statusMessage.appendChild(winnerName);
+        }        
         footer.appendChild(statusMessage);
+        MAIN.appendChild(footer);
     }
 
     resetGame() {
-        this.state = {
-            ...this.state,
-            turn: 0,
-            x: {
-                fieldPositions: [],
-            },
-            o: {
-                fieldPositions: [],
-            },
-            isGameOver: false,
-            winner: undefined,
-            isDraw: false,
-        }
+        this.state = makeObjDeepCopy(INITIAL_STATE);
 
         const board = document.querySelector('.board');
         const statusFooter = document.querySelector('.status');
@@ -210,27 +241,3 @@ class TicTacToe {
 }
 
 const ticTacToe = new TicTacToe();
-
-document.addEventListener('click', event => {
-    if (event.target.parentNode.classList.contains('board__field')) {
-        if (!event.target.classList.contains("board__field_img")) {
-            ticTacToe.makeMove(event.target.parentNode);
-        }
-    }
-
-    if (event.target.classList.contains('status__button')) {
-        ticTacToe.resetGame();
-    }
-});
-
-document.addEventListener('keyup', event => {
-    if (event.code === 'Enter' && event.target.classList.contains('board__field__button')) {
-        if (!event.target.classList.contains("board__field_img")) {
-            ticTacToe.makeMove(event.target.parentNode);
-        }
-    }
-
-    if (event.code === 'Enter' && event.target.classList.contains('status__button')) {
-        ticTacToe.resetGame();  
-    }
-});
