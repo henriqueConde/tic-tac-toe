@@ -80,6 +80,7 @@ class MusicPlayer {
     play() {
         this.state.isPlaying = true;
         const audio = document.querySelector('.music__audio');
+        audio.loop = true;
         const playIcon = document.querySelector('#play-icon');
         const coverImg = document.querySelector('.music__cover');
         const playPromise = audio.play();
