@@ -54,7 +54,14 @@ class TicTacToe {
         const el = document.createElement(tag);
 
         Object.entries(attrObj).forEach(([attr, value]) => {
-            el[attr] = value;
+            if(typeof value !== 'object') {
+                el[attr] = value;
+            } else if (attr === 'data') {
+                Object.keys(value).forEach(key => {
+                    el.dataset[key] = value[key]
+                })
+            }
+            
         })
 
         Object.entries(eventsObj).forEach(([eventType, func]) => {
@@ -83,8 +90,10 @@ class TicTacToe {
         for (let i = 1; i < 10; i++) {
             const boardField = this.createEl('div', {
                 className: `field field--${i}`,
+                data: {
+                    fieldNumber: i,
+                }
             });
-            boardField.dataset.fieldNumber = i;
             board.appendChild(boardField);
 
             const fieldButton = this.createEl('button',  {
