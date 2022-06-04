@@ -110,9 +110,10 @@ const musicPlayer = new MusicPlayer();
 
 const playIcon = document.querySelector('#play-icon');
 document.addEventListener('keyup', event => {
-    if(event.code === 'Space' && playIcon.classList.contains('fa-play')) {
+    const isFieldButton = event.target.classList.contains('field__button');
+    if(event.code === 'Space' && playIcon.classList.contains('fa-play') && !isFieldButton) {
         musicPlayer.play();
-    } else if (event.code === 'Space') {
+    } else if (event.code === 'Space' && !isFieldButton) {
         musicPlayer.pause();
     }
 })
